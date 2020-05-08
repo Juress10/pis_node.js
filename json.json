@@ -1,0 +1,77 @@
+hodnotitel..mozno aj manazer - len pridat nejake oznacenie, napr. pozicia m, h
+{
+  "id": 1,
+  "email": "lenka1@myemail.com",
+  "heslo": "heslo123",
+  "meno": "Lenka",
+  "priezvisko": "Ivanova",
+  "pozicia": "h"
+}
+
+{
+  "id": 2,
+  "email": "juraj1@myemail.com",
+  "heslo": "heslo123",
+  "meno": "Juraj",
+  "priezvisko": "Durej",
+  "pozicia": "h"
+}
+
+
+poistenec
+{
+  "id": 11,
+  "meno": "Dana",
+  "priezvisko": "Kovacova",
+  "datum_narodenia": "1995-03-17",
+  "rodne_cislo": "0123456789",
+  "adresa": {
+    "ulica": "jarna",
+    "cislo": 10,
+    "mesto": "Vranov nad Toplou",
+    "psc": "09301",
+  },
+  "telefonne_cislo": "0912345678",
+  "email": "dana1@email.com",
+  "notifikovanie": "email"
+}
+
+poistna udalost nova
+{
+  "id": 111,
+  "stav": "nová",
+  "datum_pridelenia": "2020-05-08",
+  "max_suma": 4000,
+  "datum_skody": "",
+  "opis_skody": "",
+  "hodnotitel_id": 1,
+  "poistenec_id": 11
+}
+
+poistna udalost ulozena
+{
+  "id": 222,
+  "stav": "ulozena",
+  "datum_pridelenia": "2020-05-08",
+  "max_suma": 2700,
+  "datum_skody": "2020-05-01",
+  "opis_skody": "Deformacia predneho naraznika",
+  "hodnotitel_id": 1,
+  "poistenec_id": 12
+}
+
+fotografia 
+{
+  "id": 99,
+  "url": "www.url.com/img/15",
+  "poistna_udalost_id": 222
+}
+
+sprava
+{
+  "id": 1111,
+  "odhadnuta_suma": 1000,
+  "text_spravy": "Dovolujeme si Vas oboznamit, ze ...",
+  "poistna_udalost_id": 222
+}
+
