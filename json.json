@@ -1,4 +1,4 @@
-hodnotitel..mozno aj manazer - len pridat nejake oznacenie, napr. pozicia m, h
+//hodnotitel..mozno aj manazer - len pridat nejake oznacenie, napr. pozicia m, h
 {
   "id": 1,
   "email": "lenka1@myemail.com",
@@ -18,7 +18,7 @@ hodnotitel..mozno aj manazer - len pridat nejake oznacenie, napr. pozicia m, h
 }
 
 
-poistenec
+//poistenec
 {
   "id": 11,
   "meno": "Dana",
@@ -36,7 +36,7 @@ poistenec
   "notifikovanie": "email"
 }
 
-poistna udalost nova
+//poistna udalost nova
 {
   "id": 111,
   "stav": "nová",
@@ -48,7 +48,7 @@ poistna udalost nova
   "poistenec_id": 11
 }
 
-poistna udalost ulozena
+//poistna udalost ulozena
 {
   "id": 222,
   "stav": "ulozena",
@@ -60,14 +60,14 @@ poistna udalost ulozena
   "poistenec_id": 12
 }
 
-fotografia 
+//fotografia 
 {
   "id": 99,
   "url": "www.url.com/img/15",
   "poistna_udalost_id": 222
 }
 
-sprava
+//sprava
 {
   "id": 1111,
   "odhadnuta_suma": 1000,
