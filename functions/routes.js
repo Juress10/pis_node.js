@@ -69,8 +69,41 @@ module.exports = function(app, db){
         })();
     });
 
-    //TODO vyriesit vratenie viacerych udalosti na zaklade id hodnotitela
+    // vratenie viacerych udalosti na zaklade id hodnotitela
 
+    app.get('/api/udalost/all/:id', (req, res) => {
+       
+        (async () => {
+            try {
+                const query = db.collection('poistne_udalosti');
+                let response = [];
+                await query.get().then(querySnapshot => {
+                    let docs = querySnapshot.docs;
+                    for (let doc of docs) {
+                        if(doc.data().hodnotitel_id == req.params.id) {
+                            const item = {
+                                id: doc.id,
+                                stav: doc.data().stav,
+                                datum_pridelenia: doc.data().datum_pridelenia,
+                                max_suma: doc.data().max_suma,
+                                datum_skody: doc.data().datum_skody,
+                                opis_skody: doc.data().opis_skody,
+                                hodnotitel_id: doc.data().hodnotitel_id,
+                                poistenec_id: doc.data().poistenec_id
+                            }
+                            response.push(item);
+                        }
+                    }
+                    return res.status(200).send(response);
+                });
+                return res.status(200).send(response);
+            }catch (error){
+                console.log(error);
+                return res.status(500).send(error);
+            }
+
+        })();
+    });
 
     //Update poistna udalost
     //PUT
