@@ -59,6 +59,7 @@ module.exports = function(app, db){
                 const document = db.collection('poistne_udalosti').doc(req.params.id);
                 let udalost = await document.get();
                 let response = udalost.data();
+                response.id = req.params.id;
 
                 return res.status(200).send(response);
             }catch (error){
@@ -96,7 +97,6 @@ module.exports = function(app, db){
                     }
                     return res.status(200).send(response);
                 });
-                return res.status(200).send(response);
             }catch (error){
                 console.log(error);
                 return res.status(500).send(error);
@@ -166,12 +166,24 @@ module.exports = function(app, db){
        
         (async () => {
 
-            try {
-                const document = db.collection('spravy').doc(req.params.id);
-                let sprava = await document.get();
-                let response = sprava.data();
-
-                return res.status(200).send(response);
+            try {                
+                const query = db.collection('spravy');
+                let response = [];
+                await query.get().then(querySnapshot => {
+                    let docs = querySnapshot.docs;
+                    for (let doc of docs) {
+                        if(doc.data().poistna_udalost_id == req.params.id) {
+                            const item = {
+                                id: doc.id,
+                                poistna_udalost_id: doc.data().poistna_udalost_id,
+                                odhadnuta_suma: doc.data().odhadnuta_suma,
+                                text_spravy: doc.data().text_spravy
+                            }
+                            return res.status(200).send(item);
+                        }
+                    }
+                    return res.status(404).send();
+                });
             }catch (error){
                 console.log(error);
                 return res.status(500).send(error);
