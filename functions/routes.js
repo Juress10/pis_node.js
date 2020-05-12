@@ -117,7 +117,8 @@ module.exports = function(app, db){
                 await document.update({
                    stav: req.body.stav, //TODO kto a kedy bude menit stav
                    datum_skody: req.body.datum_skody,
-                   opis_skody: req.body.opis_skody
+                   opis_skody: req.body.opis_skody,
+                   poistenec_id: req.body.poistenec_id
                 })
 
                 return res.status(200).send();
@@ -134,7 +135,11 @@ module.exports = function(app, db){
 
 //-------------------------------------------------------------------------------
 
-    //SPRAVY
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     //Create sprava
     //POST
@@ -143,11 +148,12 @@ module.exports = function(app, db){
         (async () => {
 
             try {
-                await db.collection('spravy').doc('/' + req.body.id + '/')
+                await db.collection('spravy').doc('/' + getRandomInt(1,100000) + '/')
                 .create({
                     odhadnuta_suma: req.body.odhadnuta_suma,
                     text_spravy: req.body.text_spravy,
-                    poistna_udalost_id: req.body.poistna_udalost_id
+                    poistna_udalost_id: req.body.poistna_udalost_id,
+                    meno_priezvisko: req.body.meno_priezvisko
                 })
 
                 return res.status(200).send();
@@ -177,7 +183,8 @@ module.exports = function(app, db){
                                 id: doc.id,
                                 poistna_udalost_id: doc.data().poistna_udalost_id,
                                 odhadnuta_suma: doc.data().odhadnuta_suma,
-                                text_spravy: doc.data().text_spravy
+                                text_spravy: doc.data().text_spravy,
+                                meno_priezvisko: doc.data().meno_priezvisko
                             }
                             return res.status(200).send(item);
                         }
@@ -204,7 +211,8 @@ module.exports = function(app, db){
            
                 await document.update({
                    odhadnuta_suma: req.body.odhadnuta_suma, //TODO tu sa bude riesit, ci nie je prekrocena, special case manazer
-                   text_spravy: req.body.text_spravy //ak je udalost v stave podozriva, hodnotitel nevie updatovat
+                   text_spravy: req.body.text_spravy, //ak je udalost v stave podozriva, hodnotitel nevie updatovat
+                   meno_priezvisko: req.body.meno_priezvisko
                 })
 
                 return res.status(200).send();
@@ -441,7 +449,44 @@ module.exports = function(app, db){
     });
 
 
-     //TODO ???? update poistenec -myslim, ze to vobec netreba
-    
+//---------------------------------------------------------------------------------------------------------//
+//                                              LOGIN
+//---------------------------------------------------------------------------------------------------------//
+
+app.post('/api/login', (req, res) => {
+       
+    (async () => {
+        try {                
+            const query = db.collection('zamestnanci');
+            await query.get().then(querySnapshot => {
+                let docs = querySnapshot.docs;
+                for (let doc of docs) {
+                    if(doc.data().email == req.body.email && doc.data().heslo == req.body.heslo) {
+                        const item = {
+                            id: doc.id,
+                            pozicia: doc.data().pozicia,
+                            meno: doc.data().meno
+                        }
+                        return res.status(200).send(item);
+                    }
+                }
+                return res.status(404).send();
+            });
+        }catch (error){
+            console.log(error);
+            return res.status(500).send(error);
+        }
+
+    })();
+});
+
+
+
+
+
+
+
+
+
 
 }
