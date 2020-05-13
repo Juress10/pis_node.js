@@ -483,8 +483,6 @@ app.post('/api/login', (req, res) => {
     })();
 });
 
-
-
 function checkPrice (suma) {
     if(suma > 10000)
         return 'podozriva'
