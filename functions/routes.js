@@ -480,13 +480,41 @@ app.post('/api/login', (req, res) => {
     })();
 });
 
+function checkPrice (suma) {
+    if(suma > 10000)
+        return 'podozriva'
+    else 
+        return 'ohodnotena'
+}
 
-
-
-
-
-
-
-
+app.post('/api/potvrdit', (req, res) => {
+       
+    (async () => {
+        try {                
+            const query = db.collection('poistne_udalosti');
+            await query.get().then(querySnapshot => {
+                let docs = querySnapshot.docs;
+                for (let doc of docs) {
+                    if(doc.id == req.body.id ) {
+                        const item = {
+                            id: doc.id,
+                            stav: checkPrice(req.body.suma)
+                        }
+                        
+                        const document = db.collection('poistne_udalosti').doc(item.id);
+                        document.update({
+                            stav: item.stav
+                        })
+                        return res.status(200).send();
+                    }
+                }
+                return res.status(404).send();
+            });
+        }catch (error){
+            console.log(error);
+            return res.status(500).send(error);
+        }
+    })();
+});
 
 }
