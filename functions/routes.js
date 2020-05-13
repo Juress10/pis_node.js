@@ -35,6 +35,7 @@ module.exports = function(app, db){
                     max_suma: req.body.max_suma,
                     datum_skody: req.body.datum_skody,
                     opis_skody: req.body.opis_skody,
+                    miesto_skody: req.body.miesto_skody,
                     hodnotitel_id: req.body.hodnotitel_id,
                     poistenec_id: req.body.poistenec_id
                 })
@@ -89,6 +90,7 @@ module.exports = function(app, db){
                                 max_suma: doc.data().max_suma,
                                 datum_skody: doc.data().datum_skody,
                                 opis_skody: doc.data().opis_skody,
+                                miesto_skody: doc.data().miesto_skody,
                                 hodnotitel_id: doc.data().hodnotitel_id,
                                 poistenec_id: doc.data().poistenec_id
                             }
@@ -118,6 +120,7 @@ module.exports = function(app, db){
                    stav: req.body.stav, //TODO kto a kedy bude menit stav
                    datum_skody: req.body.datum_skody,
                    opis_skody: req.body.opis_skody,
+                   miesto_skody: req.body.miesto_skody,
                    poistenec_id: req.body.poistenec_id
                 })
 
