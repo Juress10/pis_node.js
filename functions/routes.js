@@ -107,6 +107,48 @@ module.exports = function(app, db){
         })();
     });
 
+    ////Read udalost
+    //GET
+    app.get('/api/udalost/read/notifikovanie/:id', (req, res) => {
+       
+        (async () => {
+
+            try {
+                const document = db.collection('poistne_udalosti').doc(req.params.id);
+                let udalost = await document.get();
+                let temp_udalost = udalost.data();
+                let poistenec_id = temp_udalost.poistenec_id
+                //response.id = req.params.id;
+
+                const query = db.collection('poistenci');
+                await query.get().then(querySnapshot => {
+                    let docs = querySnapshot.docs;
+                    for (let doc of docs) {
+                        if(doc.id == poistenec_id) {
+                            const item = {
+                                id: doc.id,
+                            }
+                            const document = db.collection('poistenci').doc(item.id);
+                            let poistenec = document.get();
+                            let temp_poistenec = poistenec.data();
+                            let response = temp_poistenec.notifikovanie
+                            return res.status(200).send(response);
+                        }
+                    }
+                    return res.status(404).send();
+                });
+
+                return res.status(200).send(response);
+            }catch (error){
+                console.log(error);
+                return res.status(500).send(error);
+            }
+
+        })();
+    });
+
+
+
     //Update poistna udalost
     //PUT
     app.put('/api/udalost/update/:id', (req, res) => {
@@ -133,6 +175,28 @@ module.exports = function(app, db){
         })();
     });
 
+
+    //Update poistna udalost - rozpracovana
+    //PUT
+    app.put('/api/udalost/update/rozpracovana/:id', (req, res) => {
+       
+        (async () => {
+
+            try {
+                const document = db.collection('poistne_udalosti').doc(req.params.id);
+           
+                await document.update({
+                   stav: 'rozpracovana' //TODO kto a kedy bude menit stav
+                })
+
+                return res.status(200).send();
+            }catch (error){
+                console.log(error);
+                return res.status(500).send(error);
+            }
+
+        })();
+    });
 
     //TODO Delete?????? udalost
 
@@ -260,7 +324,7 @@ module.exports = function(app, db){
     });
 
 
-    //Read zamestnanec - tuto bude potrebne mozno pouzit SOAP WS readCustomerByEmail
+    //Read zamestnanec 
     //GET
     app.get('/api/zamestnanec/read/:id', (req, res) => {
        
@@ -304,6 +368,38 @@ module.exports = function(app, db){
         })();
     });
 
+    //Update zamestnanec - HESLO
+    //PUT
+    /*
+    app.put('/api/zamestnanec/update/:email', (req, res) => {
+       
+        (async () => {
+
+            try {
+                const query = db.collection('zamestnanci');
+                await query.get().then(querySnapshot => {
+                    let docs = querySnapshot.docs;
+                    for (let doc of docs) {
+                        if(doc.data().email == req.body.email) {
+                            await doc.update({
+                                heslo: req.body.heslo
+                            })
+            
+                        }
+                    }
+                    return res.status(404).send();
+                });
+           
+
+                return res.status(200).send();
+            }catch (error){
+                console.log(error);
+                return res.status(500).send(error);
+            }
+
+        })();
+    });
+*/
 //-------------------------------------------------------------------------------
 
 //FOTOGRAFIE
@@ -507,6 +603,38 @@ app.post('/api/potvrdit', (req, res) => {
                         const document = db.collection('poistne_udalosti').doc(item.id);
                         document.update({
                             stav: item.stav
+                        })
+                        return res.status(200).send();
+                    }
+                }
+                return res.status(404).send();
+            });
+        }catch (error){
+            console.log(error);
+            return res.status(500).send(error);
+        }
+    })();
+});
+
+
+// GENERUJ HESLO
+app.post('/api/generuj', (req, res) => {
+       
+    (async () => {
+        try {                
+            const query = db.collection('zamestnanci');
+            await query.get().then(querySnapshot => {
+                let docs = querySnapshot.docs;
+                for (let doc of docs) {
+                    if(doc.data().email == req.body.email) {
+                        const item = {
+                            id: doc.id,
+                            heslo: req.body.heslo
+                        }
+                        
+                        const document = db.collection('zamestnanci').doc(item.id);
+                        document.update({
+                            heslo: item.heslo
                         })
                         return res.status(200).send();
                     }
